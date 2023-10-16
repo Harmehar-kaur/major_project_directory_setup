@@ -52,4 +52,12 @@ passport.checkAuthentication =function(req,res,next){
     return res.redirect('/users/sign-in');
 }
 
+passport.setAuthenticatedUser = function(req,res,next){
+    if(req.isAuthenticated()){
+        //req.user contains the current signed in user from a session cookie 
+        res.locals.user = req.user;
+    }
+    next();
+}
+
 module.exports = passport;
