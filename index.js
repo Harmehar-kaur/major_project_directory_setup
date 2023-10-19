@@ -9,8 +9,16 @@ const db =require('./config/mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-stratergy');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
+const sassMiddleware = require('node-sass-middleware');
 
+app.use(sassMiddleware({
+    src:'./assets/scss',
+    dest: './assets/css',
+    debug: true , 
+    outputStyle: 'extended',
+    prefix:'/css'
+}));
 app.use(express.urlencoded());
 app.use(cookieParser());
 app.use(express.static('./assets'));
@@ -24,25 +32,29 @@ app.set('layout extractScripts',true);
 app.set('view engine','ejs');
 app.set('views','./views');
 
-app.use(session({
-    name:'codeial',
 
-    //changeb the secret before deployment
-    secret: 'blahsomething',
 
-    saveUninitialized:false,
-    resave:false,
-    cookie:{
-        maxAge:(1000*60*100)
-    },
-    store:new MongoStore({
-            mongooseConnection: db,
-            autoRemove:'disabled'
-    }, function(err){
+
+app.use(
+    session({
+      name: 'codeial',
+      secret: 'blahsomething',
+      saveUninitialized: false,
+      resave: false,
+      cookie: {
+        maxAge: 1000 * 60 * 100,
+      },
+      store: new MongoStore({
+        mongoUrl: 'mongodb://127.0.0.1:27017/codeial_development', // Replace with your MongoDB URL
+        mongooseConnection: db,
+        autoRemove: 'disabled'
+      }, function (err) {
         console.log(err || 'connect-mongodb setup ok');
+      })
     })
+  );
+  
 
-}));
 
 app.use(passport.initialize());
 app.use(passport.session());
