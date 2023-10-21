@@ -16,7 +16,14 @@
             <%for(post of posts) { %>
                 <li>
                     <p>
-                        <%%= post.content>
+                        <% if(locals.user && locals.user.id == post.user.id) { %>
+                        <small>
+                            <a href="/posts/destroy/<%= post.id %>">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </small>
+                        <% } %>
+                        <%= post.content %>
                         <br>
                         <small>
                             <%= post.user.name%>
@@ -35,6 +42,13 @@
                             <ul id="post-comments-<%= post._id %>">
                                 <% for (comment of post.comments){ % >
                                     <p>
+                                        <% if(locals.user && locals.user.id == comment.user.id) { %>
+                                            <small>
+                                                <a href="/comments/destroy/<%= comment.id %>">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            </small>
+                                        <% } %>
                                         <%= comment.content %>
                                         <br>
                                         <small>
@@ -51,3 +65,5 @@
 
     </div>
 </section>
+
+<script src="https://kit.fontawesome.com/e6b8bf91fa.js" crossorigin="anonymous"></script>
