@@ -1,32 +1,48 @@
-const Post = require('../models/post')
-const Comment = require('../models/comment')
+const Post = require('../models/post');
+const Comment = require('../models/comment');
 
-module.exports.create = function(req, res){
-    Post.create({
-        content: req.body.content,
-        user: req.user._id  
-    }), function(err, post){
-        if(err){
+module.exports.create = async function (req, res) {
+    try {
+        const post = await Post.create({
+            content: req.body.content,
+            user: req.user._id
+        });
+
+        if (!post) {
             console.log("Error in creating the post");
-            return;
+            // Handle the error here
+            return res.status(500).json({ error: 'An error occurred' });
         }
 
         return res.redirect('back');
+    } catch (err) {
+        console.error('Error in creating the post', err);
+        // Handle the error here
+        return res.status(500).json({ error: 'An error occurred' });
     }
-}
+};
 
-module.exports.destroy = function(req, res){
-    Post.findById(req.params.id, function(err,post){
+module.exports.destroy = async function (req, res) {
+    try {
+        const post = await Post.findById(req.params.id).exec();
 
-        if(post.user == req.user.id){
-            post.remove();
-
-            Comment.deleteMany({post:req.param.id},function(err){
-                return res.redirect('back');
-            })
-        }else{
-            return res.redirect('back');
-
+        if (!post) {
+            // Handle the case where the post was not found
+            return res.status(404).send('Post not found');
         }
-    })
-}
+
+        if (post.user.toString() === req.user._id.toString()) {
+            await post.remove();
+
+            await Comment.deleteMany({ post: req.params.id });
+
+            return res.redirect('back');
+        } else {
+            return res.redirect('back');
+        }
+    } catch (err) {
+        console.error('Error in deleting the post', err);
+        // Handle the error here
+        return res.status(500).json({ error: 'An error occurred' });
+    }
+};
