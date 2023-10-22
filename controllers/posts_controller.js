@@ -3,16 +3,10 @@ const Comment = require('../models/comment');
 
 module.exports.create = async function (req, res) {
     try {
-        const post = await Post.create({
+        await Post.create({
             content: req.body.content,
             user: req.user._id
         });
-
-        if (!post) {
-            console.log("Error in creating the post");
-            // Handle the error here
-            return res.status(500).json({ error: 'An error occurred' });
-        }
 
         return res.redirect('back');
     } catch (err) {
@@ -24,15 +18,10 @@ module.exports.create = async function (req, res) {
 
 module.exports.destroy = async function (req, res) {
     try {
-        const post = await Post.findById(req.params.id).exec();
+        let post = await Post.findById(req.params.id);
 
-        if (!post) {
-            // Handle the case where the post was not found
-            return res.status(404).send('Post not found');
-        }
-
-        if (post.user.toString() === req.user._id.toString()) {
-            await post.remove();
+        if (post.user === req.user.id) {
+            post.remove();
 
             await Comment.deleteMany({ post: req.params.id });
 
@@ -43,6 +32,6 @@ module.exports.destroy = async function (req, res) {
     } catch (err) {
         console.error('Error in deleting the post', err);
         // Handle the error here
-        return res.status(500).json({ error: 'An error occurred' });
+        return res.redirect('back'); 
     }
 };

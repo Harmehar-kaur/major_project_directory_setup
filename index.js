@@ -12,6 +12,10 @@ const passportLocal = require('./config/passport-local-stratergy');
 const MongoStore = require('connect-mongo');
 const sassMiddleware = require('node-sass-middleware');
 
+//flash 
+const flash = require('connect-flash'); 
+
+const customMware = require('./config/middleware'); 
 app.use(sassMiddleware({
     src:'./assets/scss',
     dest: './assets/css',
@@ -58,7 +62,14 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+//authenticating the user 
 app.use(passport.setAuthenticatedUser);
+
+// flash is used within session cookies hence declared after that
+app.use(flash()); 
+app.use(customMware.setFlash); 
+
 // use express router 
 app.use('/', require('./routes')); 
 
