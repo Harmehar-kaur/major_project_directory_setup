@@ -1,15 +1,17 @@
 #layout-footer{
-    color: white;
+    color: red; 
+    position: inherit;
+    background-color: red;
+    object-position: floor($number: 0);
     a{
         color: white;
         text-decoration: none;
     }
 
-    background: grey;
-    padding: 5px 10px;
-    display: flex;
-    justify-content: flex-start;
-    bottom:0; 
+    // background: grey;
+    // padding: 5px 10px;
+    // display: flex;
+    // justify-content: flex-start; 
     .footer-nav{
         ul{
             list-style: none;
