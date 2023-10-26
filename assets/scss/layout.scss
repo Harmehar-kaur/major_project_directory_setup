@@ -1,8 +1,14 @@
 body{
     margin: 0;
     /* text-align: center; */
+    height: 100%;
 
     #layout-main{
-        height: 100%;
+        height: auto ;
+
+    }
+    #layout-footer{
+        bottom: 0 ;
+
     }
 }

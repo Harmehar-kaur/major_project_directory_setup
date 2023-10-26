@@ -1,26 +1,34 @@
 const User = require('../models/user');
 
 // let's keep it same as before
-module.exports.profile = function(req, res){
-    User.findById(req.params.id, function(err, user){
-        return res.render('user_profile', {
+module.exports.profile = async function(req, res) {
+    try {
+        const user = await User.findById(req.params.id);
+        res.render('user_profile', {
             title: 'User Profile',
             profile_user: user
         });
-    });
-
+    } catch (err) {
+        // Handle errors here
+        console.error(err);
+        // You can send an error response to the client if needed
+        res.status(500).send('Internal Server Error');
+    }
 }
 
 
-module.exports.update = function(req, res){
-    if(req.user.id == req.params.id){
-        User.findByIdAndUpdate(req.params.id, req.body, function(err, user){
+
+module.exports.update = async function(req, res) {
+    try {
+        if (req.user.id == req.params.id) {
+            const user = await User.findByIdAndUpdate(req.params.id, req.body);
             req.flash('success', 'Updated!');
-            return res.redirect('back');
-        });
-    }else{
-        req.flash('error', 'Unauthorized!');
-        return res.status(401).send('Unauthorized');
+            res.redirect('back');
+        } 
+    } catch (err) {
+        // Handle errors here
+        console.error(err);
+        return res.redirect('/'); 
     }
 }
 
@@ -50,28 +58,32 @@ module.exports.signIn = function(req, res){
 }
 
 // get the sign up data
-module.exports.create = function(req, res){
-    if (req.body.password != req.body.confirm_password){
+module.exports.create = async function(req, res) {
+    if (req.body.password != req.body.confirm_password) {
         req.flash('error', 'Passwords do not match');
         return res.redirect('back');
     }
 
-    User.findOne({email: req.body.email}, function(err, user){
-        if(err){req.flash('error', err); return}
+    try {
+        const existingUser = await User.findOne({ email: req.body.email });
 
-        if (!user){
-            User.create(req.body, function(err, user){
-                if(err){req.flash('error', err); return}
-
-                return res.redirect('/users/sign-in');
-            })
-        }else{
+        if (!existingUser) {
+            const user = await User.create(req.body);
             req.flash('success', 'You have signed up, login to continue!');
-            return res.redirect('back');
+            res.redirect('/users/sign-in');
+        } else {
+            req.flash('success', 'You have signed up, login to continue!');
+            res.redirect('back');
         }
-
-    });
+    } catch (err) {
+        // Handle errors here
+        console.error(err);
+        // You can send an error response to the client if needed
+        req.flash('error', err.message);
+        res.redirect('back');
+    }
 }
+
 
 
 // sign in and create a session for the user

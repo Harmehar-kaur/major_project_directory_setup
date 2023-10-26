@@ -16,19 +16,24 @@
     </head>
 
     <body>
-        <%- include('_header'); %>
+        <header id="layout-header">
+            <%- include('_header'); %>
+        </header>
 
        
         
         <main id="layout-main">
             <%- body %>
-
         </main>
 
 
-        <%- include('_footer'); %>
+        <footer id="layout-footer">
+            <%- include('_footer'); %>
+        </footer>
 
-        <%- script %>
+        
+    </body>
+    <%- script %>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 
         <script>
@@ -54,6 +59,4 @@
                 }).show();    
             <% } %>
         </script>
-        
-    </body>
 </html>

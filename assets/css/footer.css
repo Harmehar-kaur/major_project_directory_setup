@@ -1,8 +1,11 @@
 #layout-footer {
-  color: red;
-  position: inherit;
-  background-color: red;
-  object-position: 0; }
+  color: white;
+  background-color: grey;
+  background: grey;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: flex-start;
+  bottom: 0; }
   #layout-footer a {
     color: white;
     text-decoration: none; }
