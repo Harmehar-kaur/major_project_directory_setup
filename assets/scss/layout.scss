@@ -1,14 +1,10 @@
-body{
+body
+{
     margin: 0;
     /* text-align: center; */
-    height: 100%;
-
-    #layout-main{
-        height: auto ;
-
-    }
-    #layout-footer{
-        bottom: 0 ;
-
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    main
+    {
+        padding: 0.5vw;
     }
 }

@@ -1,8 +1,0 @@
-body {
-  margin: 0;
-  /* text-align: center; */
-  height: 100%; }
-  body #layout-main {
-    height: auto; }
-  body #layout-footer {
-    bottom: 0; }
